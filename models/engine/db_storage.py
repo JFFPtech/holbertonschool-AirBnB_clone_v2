@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""DBStorage module"""
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 from models.base_model import Base
