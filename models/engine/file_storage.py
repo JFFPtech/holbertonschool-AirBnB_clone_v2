@@ -1,7 +1,6 @@
-#!/usr/bin/python3
-"""This module defines a class to manage file storage for hbnb clone"""
-import json
+# models/engine/file_storage.py
 
+import json
 
 class FileStorage:
     """This class manages storage of JSON file"""
@@ -39,7 +38,7 @@ class FileStorage:
                 serialized_objs = json.load(file)
                 for key, value in serialized_objs.items():
                     class_name, obj_id = key.split('.')
-                    module = __import__("models." + class_name, fromlist=[class_name])
+                    module = __import__("models." + class_name.lower(), fromlist=[class_name])
                     class_ = getattr(module, class_name)
                     obj = class_(**value)
                     FileStorage.__objects[key] = obj
