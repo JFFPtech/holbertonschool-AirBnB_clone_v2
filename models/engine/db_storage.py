@@ -1,12 +1,12 @@
-#!/usr/bin/python3
-"""This module defines a class to manage database storage for hbnb clone"""
-from os import getenv
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import create_engine
 from models.base_model import Base
 from models.state import State
 from models.city import City
+from os import getenv
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 
 class DBStorage:
     """This class manages storage of database"""
@@ -62,6 +62,6 @@ class DBStorage:
         Session = scoped_session(session_factory)
         self.__session = Session()
 
-def close(self):
+    def close(self):
         """Calls remove() method on the private session attribute"""
         self.__session.close()

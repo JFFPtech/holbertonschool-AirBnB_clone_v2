@@ -1,4 +1,4 @@
-##!/usr/bin/python3
+#!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
 
@@ -8,9 +8,16 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
-    def all(self):
-        """Returns the dictionary __objects"""
-        return FileStorage.__objects
+    def all(self, cls=None):
+        """Returns the dictionary of all objects"""
+        if cls:
+            objects = {}
+            for key, obj in FileStorage.__objects.items():
+                if isinstance(obj, cls):
+                    objects[key] = obj
+            return objects
+        else:
+            return FileStorage.__objects
 
     def new(self, obj):
         """Sets in __objects the obj with key <obj class name>.id"""
