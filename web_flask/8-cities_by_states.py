@@ -18,6 +18,14 @@ class State(db.Model):
 
 # Define the City model
 class City(db.Model):
+    """
+    Represents a city in the database.
+
+    Attributes:
+        id (int): The unique identifier for the city.
+        name (str): The name of the city.
+        state_id (int): The foreign key referencing the associated state.
+    """
     __tablename__ = 'cities'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)

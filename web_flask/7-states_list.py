@@ -18,6 +18,12 @@ class State(db.Model):
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
+    """
+    Renders a template that displays a list of states.
+
+    Returns:
+        The rendered template with the list of states.
+    """
     states = State.query.order_by(State.name).all()
     return render_template('7-states_list.html', states=states)
 
