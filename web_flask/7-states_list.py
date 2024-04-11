@@ -1,35 +1,28 @@
 #!/usr/bin/python3
 """Module to start a Flask web application with database connection."""
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
-import os
+from flask import Flask
+from flask import render_template
+from models import State
+from models import storage
 
 app = Flask(__name__)
 
-# Database connection configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{os.getenv("HBNB_MYSQL_USER")}:{os.getenv("HBNB_MYSQL_PWD")}@{os.getenv("HBNB_MYSQL_HOST")}/{os.getenv("HBNB_MYSQL_DB")}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+storage.reload()
 
-class State(db.Model):
-    __tablename__ = 'states'
-    id = db.Column(db.String(60), primary_key=True, nullable=False)
-    name = db.Column(db.String(128), nullable=False)
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    """Shutdown the current session."""
+    storage.close()
+
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """
-    Renders a template that displays a list of states.
+    """Display all states with the id and sorted by the name."""
+    new_dict = dict(sorted(storage.all(State).items(),
+                    key=lambda item: item[1].name))
+    return render_template('7-states_list.html', states=new_dict.values())
 
-    Returns:
-        The rendered template with the list of states.
-    """
-    states = State.query.order_by(State.name).all()
-    return render_template('7-states_list.html', states=states)
-
-@app.teardown_appcontext
-def teardown_db(exception):
-    db.session.close()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
