@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """Module to start a Flask web application with database connection."""
 from os import getenv
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
 from models import State, City
 from models import storage
 from sqlalchemy.inspection import inspect

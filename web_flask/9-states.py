@@ -1,28 +1,32 @@
 #!/usr/bin/python3
 """Module to start a Flask web application with database connection."""
 from flask import Flask, render_template
-from models.engine.db_storage import DBStorage
-from models.state import State
+from models.state import State, City
+from os import getenv
+from models import storage
+from sqlalchemy.inspection import inspect
 
 app = Flask(__name__)
 
-storage = DBStorage()
 storage.reload()
 
 @app.route('/states', strict_slashes=False)
-def states():
-    all_states = storage.all(State)
-    sorted_states = sorted(all_states.values(), key=lambda state: state.name)
-    return render_template('9-states.html', states=sorted_states)
+def state_list():
+    """Display all states with the id and sorted by the name."""
+    new_dict = dict(sorted(storage.all(State).items(),
+                    key=lambda item: item[1].name))
+    return render_template('8-cities_by_states.html', states=new_dict.values())
 
 
 @app.route("/states/<id>", strict_slashes=False)
-def states_id(id):
+def state_list_id(id):
     """Displays an HTML page with info about <id>, if it exists."""
-    state = storage.get(State, id)
-    if state is None:
-        return "State not found", 404
-    return render_template("9-states.html", state=state)
+    new_dict = dict(sorted(storage.all(State).items(),
+                    key=lambda item: item[1].name))
+    for state in new_dict.values():
+        if state.id == id:
+            return render_template('9-states.html', state=state)
+    return "Not found!", 404
 
 @app.teardown_appcontext
 def teardown_appcontext(exception):
