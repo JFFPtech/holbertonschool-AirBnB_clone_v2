@@ -10,6 +10,7 @@ from models.city import City
 class State(BaseModel, Base):
     """Represents a state for a SQL database."""
     __tablename__ = 'states'
+    id = Column(String(60), primary_key=True)
     name = Column(String(128), nullable=False)
     cities = relationship("City", cascade="all, delete", backref="state")
 

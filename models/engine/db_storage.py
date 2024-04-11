@@ -26,11 +26,15 @@ class DBStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of all objects of a given class."""
+        if cls is None:
+            cls = [State, City]
+        elif not isinstance(cls, list):
+            cls = [cls]
+        
         objects = {}
-        classes = [State, City] if cls is None else [cls]
-        for cls in classes:
-            objs = self.__session.query(cls).all()
-            for obj in objs:
+        for model in cls:
+            session_query = self.__session.query(model).all()
+            for obj in session_query:
                 key = f"{obj.__class__.__name__}.{obj.id}"
                 objects[key] = obj
         return objects
@@ -47,6 +51,12 @@ class DBStorage:
         """Deletes an object from the current database session."""
         if obj:
             self.__session.delete(obj)
+
+    def get(self, cls, id):
+        """Method to retrieve one object of class cls from the database by id."""
+        if cls and id:
+            return self.__session.query(cls).get(id)
+        return None
 
     def reload(self):
         """Recreates the database schema and initializes a new session."""
