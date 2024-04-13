@@ -8,7 +8,9 @@ from sqlalchemy.inspection import inspect
 
 app = Flask(__name__)
 
+
 storage.reload()
+
 
 @app.route('/states', strict_slashes=False)
 def state_list():
@@ -28,10 +30,12 @@ def state_list_id(id):
             return render_template('9-states.html', state=state)
     return "Not found!", 404
 
+
 @app.teardown_appcontext
 def teardown_appcontext(exception):
     """Closes the database connection."""
     storage.close()
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
